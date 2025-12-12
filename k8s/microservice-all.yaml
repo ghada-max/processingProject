@@ -1,0 +1,18 @@
+
+# kafka
+---
+# order
+---
+# processing
+---
+# notification
+---
+# secrets
+---
+# configmap
+---
+# ingress
+
+
+
+//kubectl apply -f microservices-all.yaml
