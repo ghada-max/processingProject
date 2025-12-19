@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: notification-service
-          image: <your-dockerhub-username>/notification-service:latest
+          image: ghada477/notification-service:latest
           ports:
             - containerPort: 3003
           env:
