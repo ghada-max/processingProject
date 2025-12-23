@@ -1,33 +1,5 @@
 #!/bin/bash
 
-echo "===== 1) Building Docker images ====="
-
-echo "Building ORDER image..."
-docker build -t order:latest ./order
-
-echo "Building PROCESSING image..."
-docker build -t processing:latest ./processing
-
-echo "Building NOTIFICATION image..."
-docker build -t notification:latest ./notification
-
-
-echo "===== 2) Tagging images (for Docker Hub) ====="
-
-docker tag order:latest ghada477/order:latest
-docker tag processing:latest ghada477/processing:latest
-docker tag notification:latest ghada477/notification:latest
-
-
-echo "===== 3) Pushing images to Docker Hub ====="
-
-docker push ghada477/order:latest
-docker push ghada477/processing:latest
-docker push ghada477/notification:latest
-
-
-echo "===== 4) Deploying Kubernetes Configurations ====="
-
 
 
 echo "===== 5) Deploying Kafka ====="

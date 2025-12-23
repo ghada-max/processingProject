@@ -2,38 +2,27 @@ pipeline {
     agent any
 
     environment {
-        REGISTRY = "your_dockerhub_username"
-        IMAGE_NAME = "order-service"
+        DOCKER_HUB = credentials('docker-hub-credentials')
+        SERVICES = "order notification processing"
     }
 
     stages {
-
-        stage("Checkout") {
+        stage("Build & Push Docker") {
             steps {
-                git branch: 'main', url: 'https://github.com/yourrepo.git'
+                script {
+                    sh "echo ${DOCKER_HUB_PSW} | docker login -u ${DOCKER_HUB_USR} --password-stdin"
+
+                    def serviceList = SERVICES.split(' ')
+                    for (service in serviceList) {
+                        def imageName = "${DOCKER_HUB_USR}/${service}:latest"
+                        sh "docker build -t ${imageName} ./${service}"
+                        sh "docker push ${imageName}"
+                    }
+                }
             }
         }
 
-        stage("Build Maven") {
-            steps {
-                sh "mvn clean package -DskipTests"
-            }
-        }
-
-        stage("Build Docker Image") {
-            steps {
-                sh "docker build -t $REGISTRY/$IMAGE_NAME:latest ."
-            }
-        }
-
-        stage("Push to Docker Hub") {
-            steps {
-                sh "docker login -u $REGISTRY -p $DOCKER_HUB_PASSWORD"
-                sh "docker push $REGISTRY/$IMAGE_NAME:latest"
-            }
-        }
-
-        stage("Deploy to Kubernetes") {
+        stage("Deploy to K8s") {
             steps {
                 sh "chmod +x deploy.sh"
                 sh "./deploy.sh"
